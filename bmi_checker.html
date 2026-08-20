@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Green BMI Checker</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#e9f8ee,#fff);color:#173d25;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px}
+.card{width:100%;max-width:520px;background:#fff;border-radius:24px;padding:28px;box-shadow:0 15px 45px #1c8a3a22}
+.top{display:flex;justify-content:space-between;align-items:center}.logo{font-size:28px;background:#21a653;color:#fff;width:50px;height:50px;border-radius:15px;display:grid;place-items:center}
+select,input{width:100%;padding:13px;margin-top:7px;border:1px solid #cce5d4;border-radius:11px;font-size:16px;background:#fbfffc}
+.lang{width:auto;padding:9px}.field{margin:16px 0}label{font-weight:700;color:#285d39}
+h1{color:#17743a;margin:22px 0 8px;font-size:28px}.sub{color:#6c8172;line-height:1.5}
+button{width:100%;padding:15px;border:0;border-radius:12px;background:#20a653;color:white;font-weight:700;font-size:17px;cursor:pointer}
+button:hover{background:#178541}.result{display:none;margin-top:22px;padding:20px;border-radius:16px;background:#effaf2;border:1px solid #ccebd5}.result.show{display:block}
+.num{text-align:center;font-size:44px;font-weight:800;color:#17743a}.title{text-align:center;font-weight:700;font-size:18px}.msg{line-height:1.55;color:#4d6655}
+.notice{margin-top:15px;padding:12px;background:#fff8dd;border-left:4px solid #e3b72e;border-radius:7px;font-size:13px;line-height:1.5}.foot{text-align:center;color:#829287;font-size:12px;margin-top:18px}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="top"><div class="logo">🌿</div><select id="lang" class="lang" onchange="setLang()"><option value="id">🇮🇩 Indonesia</option><option value="en">🇬🇧 English</option></select></div>
+  <h1 id="h">BMI Health Checker</h1>
+  <div class="sub" id="sub">Masukkan data kamu untuk menghitung BMI sebagai informasi kesehatan.</div>
+
+  <div class="field"><label id="la">Umur</label><input id="age" type="number" min="1" max="120" placeholder="Contoh: 16"></div>
+  <div class="field"><label id="lg">Jenis Kelamin</label><select id="gender"><option value="">-- Pilih --</option><option value="male">Laki-laki</option><option value="female">Perempuan</option></select></div>
+  <div class="field"><label id="lh">Tinggi Badan (cm)</label><input id="height" type="number" min="50" max="250" placeholder="Contoh: 165"></div>
+  <div class="field"><label id="lw">Berat Badan (kg)</label><input id="weight" type="number" min="1" max="300" step=".1" placeholder="Contoh: 55"></div>
+  <button id="btn" onclick="calc()">Hitung BMI</button>
+
+  <div id="result" class="result">
+    <div class="title" id="rt">Hasil Perhitungan</div>
+    <div class="num" id="num">-</div>
+    <div class="msg" id="msg"></div>
+    <div class="notice" id="notice">⚠️ BMI adalah alat skrining, bukan diagnosis medis. Untuk usia di bawah 18 tahun, penilaian yang tepat menggunakan BMI menurut umur dan jenis kelamin serta kurva pertumbuhan.</div>
+  </div>
+  <div class="foot" id="foot">Data diproses di perangkat kamu dan tidak dikirim ke server.</div>
+</div>
+
+<script>
+const T={
+id:{h:"BMI Health Checker",sub:"Masukkan data kamu untuk menghitung BMI sebagai informasi kesehatan.",a:"Umur",g:"Jenis Kelamin",hgt:"Tinggi Badan (cm)",w:"Berat Badan (kg)",pick:"-- Pilih --",male:"Laki-laki",female:"Perempuan",btn:"Hitung BMI",rt:"Hasil Perhitungan",bad:"Mohon isi semua data dengan benar.",under:"Karena umur kamu di bawah 18 tahun, kategori BMI dewasa tidak boleh digunakan. Penilaian yang tepat menggunakan BMI menurut umur dan jenis kelamin serta kurva pertumbuhan.",normal:"BMI berada dalam rentang yang umumnya dianggap sehat untuk orang dewasa.",low:"BMI berada di bawah rentang BMI dewasa yang umum digunakan sebagai acuan.",over:"BMI berada di atas rentang BMI dewasa yang umum digunakan sebagai acuan.",obese:"BMI berada pada rentang yang secara umum dikategorikan sebagai obesitas pada orang dewasa.",notice:"⚠️ BMI adalah alat skrining, bukan diagnosis medis. Untuk usia di bawah 18 tahun, penilaian yang tepat menggunakan BMI menurut umur dan jenis kelamin serta kurva pertumbuhan.",foot:"Data diproses di perangkat kamu dan tidak dikirim ke server."},
+en:{h:"BMI Health Checker",sub:"Enter your information to calculate BMI for health information.",a:"Age",g:"Sex",hgt:"Height (cm)",w:"Weight (kg)",pick:"-- Select --",male:"Male",female:"Female",btn:"Calculate BMI",rt:"Calculation Result",bad:"Please enter all information correctly.",under:"Because you are under 18, adult BMI categories should not be used. A proper assessment uses BMI-for-age and sex with a growth chart.",normal:"BMI is within the range generally considered healthy for adults.",low:"BMI is below the adult BMI range generally used as a reference.",over:"BMI is above the adult BMI range generally used as a reference.",obese:"BMI falls within the range generally categorized as obesity for adults.",notice:"⚠️ BMI is a screening tool, not a medical diagnosis. For people under 18, proper assessment uses BMI-for-age and sex with a growth chart.",foot:"Your data is processed on your device and is not sent to a server."}
+};
+function setLang(){
+ let t=T[document.getElementById("lang").value];
+ h.textContent=t.h;sub.textContent=t.sub;la.textContent=t.a;lg.textContent=t.g;lh.textContent=t.hgt;lw.textContent=t.w;btn.textContent=t.btn;rt.textContent=t.rt;notice.textContent=t.notice;foot.textContent=t.foot;
+ gender.options[0].text=t.pick;gender.options[1].text=t.male;gender.options[2].text=t.female;
+}
+function calc(){
+ let t=T[document.getElementById("lang").value],a=+age.value,ht=+height.value,w=+weight.value;
+ if(!a||!ht||!w||!gender.value){alert(t.bad);return}
+ let bmi=w/((ht/100)**2);num.textContent=bmi.toFixed(1);
+ msg.textContent=a<18?t.under:(bmi<18.5?t.low:bmi<25?t.normal:bmi<30?t.over:t.obese);
+ result.classList.add("show");
+}
+</script>
+</body>
+</html>
